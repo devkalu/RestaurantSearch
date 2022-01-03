@@ -13,28 +13,51 @@ const HomeScreen = () => {
   const [term, setTerm] = useState("");
   const [searchApi, results, errorMessage] = useResults(term);
 
+  const filterResultsByPrice = (results, price) => {
+    return results.filter((result) => result.price === price);
+  };
+
   return (
     <ScrollView>
       <View style={styles.containerOne}>
         <View style={styles.searchInputStyle}>
           <Text style={styles.welcomeTextStyle}>
-            A Restaurant is One Search Away{results.length}
+            A Restaurant is One Search Away
           </Text>
           <SearchInput
             term={term}
             onTermChange={setTerm}
             onTermSubmit={() => searchApi(term)}
           />
+          {errorMessage ? (
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          ) : null}
         </View>
       </View>
       <View style={styles.containerTwo}>
         <View style={styles.categoryStyle}>
-          <CategoryList />
+          <CategoryList searchApi={searchApi} />
         </View>
         <View style={styles.restaurantCardsStyle}>
-          <RestaurantCards title="Cheap" />
-          <RestaurantCards title="Bit Pricey" />
-          <RestaurantCards title="Expensive" />
+          <RestaurantCards
+            title="Cheap"
+            results={filterResultsByPrice(results, "€")}
+          />
+          <RestaurantCards
+            title="Bit Pricey"
+            results={filterResultsByPrice(results, "€€")}
+          />
+          <RestaurantCards
+            title="Expensive"
+            results={filterResultsByPrice(results, "€€€")}
+          />
+
+          {filterResultsByPrice(results, "€€€€").length > 0 ? (
+            <RestaurantCards
+              title="Very Expensive"
+              results={filterResultsByPrice(results, "€€€€")}
+            />
+          ) : null}
           <View style={styles.end}></View>
         </View>
       </View>
@@ -54,7 +77,7 @@ const styles = StyleSheet.create({
   },
   searchInputStyle: {
     flex: 1,
-    top: size * 0.065,
+    top: size * 0.04,
   },
   welcomeTextStyle: {
     fontSize: size * 0.03,
@@ -63,17 +86,17 @@ const styles = StyleSheet.create({
     marginHorizontal: width * 0.03,
     marginBottom: size * 0.01,
   },
-  sideImage: {
-    height: 100,
-    position: "absolute",
-    width: width * 0.3,
-    flex: 1,
-  },
+
   categoryStyle: {
     bottom: size * 0.06,
   },
   restaurantCardsStyle: {
     bottom: width * 0.12,
+  },
+  errorText: {
+    fontSize: size * 0.012,
+    marginHorizontal: width * 0.03,
+    color: "red",
   },
 });
 

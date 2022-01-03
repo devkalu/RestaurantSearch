@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList, TouchableOpacity } from "react-native";
 
 import Category from "./Category";
 
@@ -15,7 +15,7 @@ const categories = [
   { uri: require("../../assets/wine.png"), title: "Wine" },
 ];
 
-const CategoryList = () => {
+const CategoryList = ({ searchApi }) => {
   return (
     <View>
       <FlatList
@@ -23,9 +23,13 @@ const CategoryList = () => {
         horizontal
         showsHorizontalScrollIndicator={false}
         data={categories}
-        renderItem={({ item }) => (
-          <Category uri={item.uri} title={item.title} />
-        )}
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity onPress={() => searchApi(item.title)}>
+              <Category uri={item.uri} title={item.title} />
+            </TouchableOpacity>
+          );
+        }}
         keyExtractor={(item) => item.title}
       />
     </View>

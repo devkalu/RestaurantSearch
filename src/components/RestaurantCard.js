@@ -10,15 +10,23 @@ const RestaurantCard = ({ image, title, rating, review, location }) => {
       <View style={styles.imageContainer}>
         <Image source={image} style={styles.imageStyle} />
       </View>
-      <Text style={styles.titleStyle}>{title}</Text>
+      <Text style={styles.titleStyle} numberOfLines={1} ellipsizeMode="tail">
+        {title}
+      </Text>
       <View style={[styles.locationStyle, styles.row]}>
         <Ionicons name="md-location" style={styles.icon} />
-        <Text style={styles.locationTextStyle}>{location}</Text>
+        <Text
+          style={styles.locationTextStyle}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {location}
+        </Text>
       </View>
       <View style={[styles.row, styles.ratingStyle]}>
         <Ionicons name="star" style={[styles.icon, { color: "gold" }]} />
         <Text style={styles.ratingTextStyle}>
-          {rating}({review})
+          {rating}({review} Reviews)
         </Text>
       </View>
     </View>
@@ -30,7 +38,6 @@ const styles = StyleSheet.create({
     width: size * 0.175,
     height: size * 0.2,
     backgroundColor: "#fff",
-    alignItems: "center",
     borderRadius: size * 0.02,
 
     paddingHorizontal: size * 0.01,
@@ -49,9 +56,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   locationStyle: {
-    alignSelf: "flex-start",
     marginTop: size * 0.005,
-    alignItems: "center",
+    marginRight: size * 0.0075,
   },
   icon: {
     color: "red",
@@ -63,9 +69,8 @@ const styles = StyleSheet.create({
     color: "gray",
   },
   titleStyle: {
-    fontSize: size * 0.013,
+    fontSize: size * 0.0135,
     alignSelf: "flex-start",
-
     fontWeight: "bold",
   },
   ratingTextStyle: {

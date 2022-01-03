@@ -14,14 +14,15 @@ export default (term) => {
           location: "rotterdam",
         },
       });
+      setErrorMessage("");
       setResults(response.data.businesses);
     } catch (err) {
-      setErrorMessage(
-        "Something went wrong with your request please try again later."
-      );
+      setErrorMessage("Something went wrong, please try again later.");
     }
   };
-  useEffect(() => (term ? searchApi(term) : searchApi("pasta")), []);
-  console.log(results);
+  useEffect(() => {
+    term ? searchApi(term) : searchApi("pasta");
+  }, []);
+
   return [searchApi, results, errorMessage];
 };
