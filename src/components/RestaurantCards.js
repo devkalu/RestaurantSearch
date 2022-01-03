@@ -4,38 +4,11 @@ import { StyleSheet, View, FlatList, Text } from "react-native";
 import RestaurantCard from "./RestaurantCard";
 import { width, height, size } from "../commonStyles/styles";
 
-const restaurants = [
-  {
-    uri: require("../../assets/restaurant1.jpeg"),
-    title: "The Gourmet Kitchen",
-    rating: 4.7,
-    review: 123,
-    location: "Rotterdam",
-  },
-  {
-    uri: require("../../assets/restaurant2.jpeg"),
-    title: "Chipotle Mexican Grill",
-    rating: 4.7,
-    review: 123,
-    location: "Rotterdam",
-  },
-  {
-    uri: require("../../assets/restaurant3.jpeg"),
-    title: "Spago ",
-    rating: 4.7,
-    review: 123,
-    location: "Rotterdam",
-  },
-  {
-    uri: require("../../assets//restaurant4.jpeg"),
-    title: "A380 In-Flight Kitchen",
-    rating: 4.7,
-    review: 123,
-    location: "Rotterdam",
-  },
-];
+const RestaurantCards = ({ title, results }) => {
+  const extractAddress = (obj) => {
+    return obj["address1"];
+  };
 
-const RestaurantCards = ({ title }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.categoryTextStyle}>{title}</Text>
@@ -43,17 +16,18 @@ const RestaurantCards = ({ title }) => {
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
-        data={restaurants}
+        data={results}
         renderItem={({ item }) => (
           <RestaurantCard
-            image={item.uri}
-            title={item.title}
+            title={item.name}
+            image={{ uri: item.image_url }}
             rating={item.rating}
-            review={item.review}
-            location={item.location}
+            review={item.review_count}
+            location={extractAddress(item.location)}
           />
         )}
-        keyExtractor={(item) => item.title}
+        //image, title, rating, review, location
+        keyExtractor={(item) => item.id}
       />
     </View>
   );
@@ -68,6 +42,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#87be57",
     marginLeft: width * 0.03,
+    marginBottom: size * 0.005,
   },
   row: {
     flexDirection: "row",
