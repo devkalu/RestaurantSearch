@@ -6,37 +6,19 @@ import SearchInput from "../components/SearchInput";
 import CategoryList from "../components/CategoryList";
 import RestaurantCards from "../components/RestaurantCards";
 import { width, height, size } from "../commonStyles/styles";
-import axios from "../api/yelp";
+
+import useResults from "../hooks/useResults";
 
 const HomeScreen = () => {
-  const [term, setTerm] = useState("pasta");
-  const [results, setResults] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [term, setTerm] = useState("");
+  const [searchApi, results, errorMessage] = useResults(term);
 
-  const searchApi = async (searchTerm) => {
-    console.log("Hi there again");
-    try {
-      const response = await axios.get("/search", {
-        params: {
-          limit: 50,
-          term: searchTerm,
-          location: "rotterdam",
-        },
-      });
-      setResults(response.data.businesses);
-    } catch (err) {
-      setErrorMessage(
-        "Something went wrong with your request please try again later."
-      );
-    }
-  };
-  useEffect(() => searchApi(term), [term]);
   return (
     <ScrollView>
       <View style={styles.containerOne}>
         <View style={styles.searchInputStyle}>
           <Text style={styles.welcomeTextStyle}>
-            A Restaurant is One Search Away
+            A Restaurant is One Search Away{results.length}
           </Text>
           <SearchInput
             term={term}
