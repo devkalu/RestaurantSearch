@@ -1,14 +1,14 @@
 import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 
 import { width, height, size } from "../commonStyles/styles";
 
-const Category = ({ uri, title }) => {
+const Category = ({ source, title, searchApi }) => {
   return (
-    <View style={styles.container}>
-      <Image source={uri} style={styles.imageStyle} />
+    <TouchableOpacity style={styles.container} onPress={() => searchApi(title)}>
+      <Image source={source} style={styles.imageStyle} />
       <Text style={styles.textStyle}>{title}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

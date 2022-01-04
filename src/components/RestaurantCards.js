@@ -1,10 +1,17 @@
 import React from "react";
-import { StyleSheet, View, FlatList, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+import { withNavigation } from "react-navigation";
 
 import RestaurantCard from "./RestaurantCard";
 import { width, height, size } from "../commonStyles/styles";
 
-const RestaurantCards = ({ title, results }) => {
+const RestaurantCards = ({ title, results, navigation }) => {
   const extractAddress = (obj) => {
     return obj["address1"];
   };
@@ -17,15 +24,21 @@ const RestaurantCards = ({ title, results }) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         data={results}
-        renderItem={({ item }) => (
-          <RestaurantCard
-            title={item.name}
-            image={{ uri: item.image_url }}
-            rating={item.rating}
-            review={item.review_count}
-            location={extractAddress(item.location)}
-          />
-        )}
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Restaurant", { id: item.id })}
+            >
+              <RestaurantCard
+                title={item.name}
+                image={{ uri: item.image_url !== "" ? item.image_url : null }}
+                rating={item.rating}
+                review={item.review_count}
+                location={extractAddress(item.location)}
+              />
+            </TouchableOpacity>
+          );
+        }}
         //image, title, rating, review, location
         keyExtractor={(item) => item.id}
       />
@@ -49,4 +62,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RestaurantCards;
+export default withNavigation(RestaurantCards);

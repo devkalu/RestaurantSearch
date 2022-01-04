@@ -14,6 +14,7 @@ export default (term) => {
           location: "rotterdam",
         },
       });
+
       setErrorMessage("");
       setResults(response.data.businesses);
     } catch (err) {
@@ -21,6 +22,7 @@ export default (term) => {
     }
   };
   useEffect(() => {
+    setErrorMessage("");
     term ? searchApi(term) : searchApi("pasta");
   }, []);
 

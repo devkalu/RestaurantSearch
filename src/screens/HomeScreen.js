@@ -13,6 +13,8 @@ const HomeScreen = () => {
   const [term, setTerm] = useState("");
   const [searchApi, results, errorMessage] = useResults(term);
 
+  console.log(term);
+
   const filterResultsByPrice = (results, price) => {
     return results.filter((result) => result.price === price);
   };
@@ -39,18 +41,24 @@ const HomeScreen = () => {
           <CategoryList searchApi={searchApi} />
         </View>
         <View style={styles.restaurantCardsStyle}>
-          <RestaurantCards
-            title="Cheap"
-            results={filterResultsByPrice(results, "€")}
-          />
-          <RestaurantCards
-            title="Bit Pricey"
-            results={filterResultsByPrice(results, "€€")}
-          />
-          <RestaurantCards
-            title="Expensive"
-            results={filterResultsByPrice(results, "€€€")}
-          />
+          {filterResultsByPrice(results, "€").length > 0 ? (
+            <RestaurantCards
+              title="Affordable"
+              results={filterResultsByPrice(results, "€")}
+            />
+          ) : null}
+          {filterResultsByPrice(results, "€€").length > 0 ? (
+            <RestaurantCards
+              title="Bit Pricey"
+              results={filterResultsByPrice(results, "€€")}
+            />
+          ) : null}
+          {filterResultsByPrice(results, "€€€").length > 0 ? (
+            <RestaurantCards
+              title="Expensive"
+              results={filterResultsByPrice(results, "€€€")}
+            />
+          ) : null}
 
           {filterResultsByPrice(results, "€€€€").length > 0 ? (
             <RestaurantCards

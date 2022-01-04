@@ -16,6 +16,8 @@ const categories = [
 ];
 
 const CategoryList = ({ searchApi }) => {
+  
+
   return (
     <View>
       <FlatList
@@ -23,13 +25,13 @@ const CategoryList = ({ searchApi }) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         data={categories}
-        renderItem={({ item }) => {
-          return (
-            <TouchableOpacity onPress={() => searchApi(item.title)}>
-              <Category uri={item.uri} title={item.title} />
-            </TouchableOpacity>
-          );
-        }}
+        renderItem={({ item }) => (
+          <Category
+            source={item.uri !== "" ? item.uri : null}
+            title={item.title}
+            searchApi={searchApi}
+          />
+        )}
         keyExtractor={(item) => item.title}
       />
     </View>
