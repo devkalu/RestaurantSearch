@@ -5,8 +5,10 @@ import {
   FlatList,
   Text,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { withNavigation } from "react-navigation";
+import { Asset } from "expo-asset";
 
 import RestaurantCard from "./RestaurantCard";
 import { width, height, size } from "../commonStyles/styles";
@@ -31,7 +33,13 @@ const RestaurantCards = ({ title, results, navigation }) => {
             >
               <RestaurantCard
                 title={item.name}
-                image={{ uri: item.image_url !== "" ? item.image_url : null }}
+                image={{
+                  uri:
+                    item.image_url !== ""
+                      ? item.image_url
+                      : Asset.fromModule(require("../../assets/no_image.jpg"))
+                          .uri,
+                }}
                 rating={item.rating}
                 review={item.review_count}
                 location={extractAddress(item.location)}

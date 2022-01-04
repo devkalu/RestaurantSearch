@@ -7,18 +7,38 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { withNavigation } from "react-navigation";
+import { Ionicons, Feather, Entypo, FontAwesome } from "@expo/vector-icons";
+import { Asset } from "expo-asset";
 
 //internal import
-import { size } from "../commonStyles/styles";
+import { size, width } from "../commonStyles/styles";
 import yelp from "../api/yelp";
 
 const RestaurantDetail = ({ navigation }) => {
   const [results, setResult] = useState(null);
 
   const id = navigation.getParam("id");
+  const day = Number(new Date().getDay());
+
+  const openingHours = (day, arr) => {
+    let start = "";
+    let end = "";
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].day === day) {
+        let startVal = arr[i].start;
+        let endVal = arr[i].end;
+
+        start = `${startVal.substring(0, 2)}:${startVal.substring(
+          2,
+          startVal.length
+        )}`;
+        end = `${endVal.substring(0, 2)}:${endVal.substring(2, endVal.length)}`;
+      }
+    }
+    return `${start} - ${end}`;
+  };
 
   const getCategory = (arr) => {
     const tempArr = [];
@@ -40,27 +60,46 @@ const RestaurantDetail = ({ navigation }) => {
     const response = await yelp.get(`/${id}`);
     setResult(response.data);
   };
+
   useEffect(() => {
     getResult(id);
   }, []);
   if (results) {
     console.log(results);
-    console.log(getCategory(results.categories));
     return (
       <ScrollView style={styles.container}>
         <TouchableOpacity
           style={styles.iconContainer}
           onPress={() => navigation.pop()}
         >
-          <Ionicons
-            name="chevron-back-circle"
-            size={24}
-            color="black"
-            style={styles.iconStyle}
-          />
+          <Ionicons name="chevron-back-circle" style={styles.iconStyle} />
         </TouchableOpacity>
 
-        <Image source={{ uri: results.image_url }} style={styles.imageStyle} />
+        {results.photos.length > 0 ? (
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={results.photos}
+            renderItem={({ item }) => (
+              <Image
+                source={{ uri: item }}
+                style={{
+                  height: size * 0.35,
+                  width: width,
+
+                  borderRadius: size * 0.005,
+                  marginRight: size * 0.005,
+                }}
+              />
+            )}
+            keyExtractor={(item) => item}
+          />
+        ) : (
+          <Image
+            source={require("../../assets/no_image.jpg")}
+            style={{ height: size * 0.35, width: width }}
+          />
+        )}
         <View style={styles.detailContainer}>
           <Text style={styles.titleStyle}>{results.name}</Text>
           <Text style={styles.categoriesStyle}>
@@ -74,27 +113,77 @@ const RestaurantDetail = ({ navigation }) => {
           </View>
 
           <View style={styles.openClosed}>
-            {results.is_open_now ? (
+            <Feather name="clock" style={styles.openIcon} />
+            <Text style={styles.openTitle}>Opening Hours: </Text>
+            <Text style={styles.timeStyle}>
+              {openingHours(day, results.hours[0].open)}{" "}
+            </Text>
+            {results.hours[0].is_open_now ? (
               <Text
                 style={{
-                  fontWeight: "800",
+                  fontWeight: "500",
                   fontSize: size * 0.012,
                   color: "#87be57",
                 }}
               >
-                Open Now
+                (Open)
               </Text>
             ) : (
               <Text
                 style={{
-                  fontWeight: "800",
+                  fontWeight: "500",
                   fontSize: size * 0.012,
                   color: "red",
                 }}
               >
-                Closed Now
+                (Closed)
               </Text>
             )}
+          </View>
+        </View>
+        <View style={styles.actionStyle}>
+          <TouchableOpacity>
+            <Ionicons name="call" style={styles.actionIconStyle} />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Entypo name="direction" style={styles.actionIconStyle} />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <FontAwesome name="share" style={styles.actionIconStyle} />
+          </TouchableOpacity>
+        </View>
+
+        <View
+          style={{
+            height: size * 0.15,
+
+            marginTop: size * 0.0075,
+            backgroundColor: "#fff",
+          }}
+        >
+          <View
+            style={{
+              marginHorizontal: size * 0.03,
+              flexDirection: "row",
+              paddingVertical: size * 0.01,
+            }}
+          >
+            <Ionicons
+              name="location"
+              style={{
+                fontSize: size * 0.02,
+                marginRight: size * 0.005,
+                color: "#87be57",
+              }}
+            />
+            <Text
+              style={{
+                fontSize: size * 0.0125,
+                flex: 1,
+              }}
+            >
+              {results.location.display_address}
+            </Text>
           </View>
         </View>
       </ScrollView>
@@ -129,6 +218,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: size * 0.03,
     height: size * 0.125,
     paddingTop: size * 0.01,
+    marginTop: size * 0.005,
   },
   container: {
     backgroundColor: "#f8f8fa",
@@ -153,7 +243,34 @@ const styles = StyleSheet.create({
     marginHorizontal: size * 0.03,
   },
   openClosed: {
-    marginTop: size * 0.005,
+    flexDirection: "row",
+    top: size * -0.01,
+  },
+  openIcon: {
+    fontSize: size * 0.012,
+    color: "#030005",
+    marginRight: size * 0.005,
+  },
+  openTitle: {
+    fontSize: size * 0.012,
+    color: "#030005",
+    fontWeight: "600",
+  },
+  timeStyle: {
+    color: "#9e9fa1",
+  },
+  actionStyle: {
+    paddingHorizontal: size * 0.03,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    height: size * 0.05,
+    backgroundColor: "#fff",
+    marginTop: size * 0.0075,
+    alignItems: "center",
+  },
+  actionIconStyle: {
+    fontSize: size * 0.02,
+    color: "#87be57",
   },
 });
 
