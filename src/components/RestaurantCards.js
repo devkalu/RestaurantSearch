@@ -18,6 +18,10 @@ const RestaurantCards = ({ title, results, navigation }) => {
     return obj["address1"];
   };
 
+  if (!results.length) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.categoryTextStyle}>{title}</Text>

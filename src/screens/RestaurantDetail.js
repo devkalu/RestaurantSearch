@@ -65,7 +65,6 @@ const RestaurantDetail = ({ navigation }) => {
     getResult(id);
   }, []);
   if (results) {
-    console.log(results);
     return (
       <ScrollView style={styles.container}>
         <TouchableOpacity
@@ -86,7 +85,6 @@ const RestaurantDetail = ({ navigation }) => {
                 style={{
                   height: size * 0.35,
                   width: width,
-
                   borderRadius: size * 0.005,
                   marginRight: size * 0.005,
                 }}
@@ -116,7 +114,9 @@ const RestaurantDetail = ({ navigation }) => {
             <Feather name="clock" style={styles.openIcon} />
             <Text style={styles.openTitle}>Opening Hours: </Text>
             <Text style={styles.timeStyle}>
-              {openingHours(day, results.hours[0].open)}{" "}
+              {results.hours[0]
+                ? openingHours(day, results.hours[0].open)
+                : null}{" "}
             </Text>
             {results.hours[0].is_open_now ? (
               <Text
