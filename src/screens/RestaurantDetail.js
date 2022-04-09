@@ -76,6 +76,7 @@ const RestaurantDetail = ({ navigation }) => {
 
         {results.photos.length > 0 ? (
           <FlatList
+            pagingEnabled={true}
             horizontal
             showsHorizontalScrollIndicator={false}
             data={results.photos}
@@ -86,7 +87,6 @@ const RestaurantDetail = ({ navigation }) => {
                   height: size * 0.35,
                   width: width,
                   borderRadius: size * 0.005,
-                  marginRight: size * 0.005,
                 }}
               />
             )}

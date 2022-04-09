@@ -5,7 +5,11 @@ import { width, height, size } from "../commonStyles/styles";
 
 const Category = ({ source, title, searchApi }) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={() => searchApi(title)}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => searchApi(title)}
+      activeOpacity={0.8}
+    >
       <Image source={source} style={styles.imageStyle} />
       <Text style={styles.textStyle}>{title}</Text>
     </TouchableOpacity>

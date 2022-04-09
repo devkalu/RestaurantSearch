@@ -27,7 +27,10 @@ const HomeScreen = () => {
           <SearchInput
             term={term}
             onTermChange={setTerm}
-            onTermSubmit={() => searchApi(term)}
+            onTermSubmit={() => {
+              searchApi(term);
+              setTerm("");
+            }}
           />
           {errorMessage ? (
             <Text style={styles.errorText}>{errorMessage}</Text>

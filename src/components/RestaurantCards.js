@@ -34,6 +34,7 @@ const RestaurantCards = ({ title, results, navigation }) => {
           return (
             <TouchableOpacity
               onPress={() => navigation.navigate("Restaurant", { id: item.id })}
+              activeOpacity={0.8}
             >
               <RestaurantCard
                 title={item.name}
